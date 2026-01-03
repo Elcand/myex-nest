@@ -3,9 +3,19 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { ItemsModule } from './items/items.module';
+import { User } from './users/users.entity';
 
 @Module({
-  imports: [UsersModule, ItemsModule],
+  imports: [
+    TypeOrmModule.forRoot({
+      type: 'sqlite',
+      database: 'db.sqlite',
+      entities: [User],
+      synchronize: true,
+    }),
+    UsersModule,
+    ItemsModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
