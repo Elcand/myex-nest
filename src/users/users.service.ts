@@ -27,5 +27,5 @@ export class UsersService {
     }
     Object.assign(user, attrs);
     return this.repo.save(user);
-  },
+  }
 }
