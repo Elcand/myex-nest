@@ -1,7 +1,9 @@
 import { createParamDecorator, ExecutionContext } from "@nestjs/common";
 
 export const CurrentUser = createParamDecorator(
-  (data: string, ctx: ExecutionContext) => {
-    return 'this is authenticated user';
+  (data: never, ctx: ExecutionContext) => {
+    const request = ctx.switchToHttp().getRequest();
+    request.session.userId;
+    console.log(request.session.userId);
   },
 );
