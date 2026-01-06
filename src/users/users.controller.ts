@@ -7,10 +7,11 @@ import {
   Patch,
   Post,
   Query,
+  Session,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
-import { UpdateUserDto } from './dtos/update-user.dto'
+import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserDto } from './dtos/user.dto';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { AuthService } from './auth.service';
@@ -19,14 +20,18 @@ import { LoginUserDto } from './dtos/login-user.dto';
 @Controller('users')
 @Serialize(UserDto)
 export class UsersController {
-  constructor(private usersService: UsersService, private authService: AuthService) {}
+  constructor(
+    private usersService: UsersService,
+    private authService: AuthService,
+  ) {}
+
   @Get()
   findAllUsers(@Query('email') email: string) {
     return this.usersService.findAll(email);
   }
 
   @Post()
-  cerateUser(@Body() body: CreateUserDto) {
+  crateUser(@Body() body: CreateUserDto) {
     this.usersService.create(body.email, body.name, body.password);
   }
 
@@ -46,12 +51,21 @@ export class UsersController {
   }
 
   @Post('/register')
-  register(@Body() body: CreateUserDto) {
-    return this.authService.register(body.name, body.email, body.password);
+  async register(@Body() body: CreateUserDto, @Session() session: any) {
+    const user = await this.authService.register(
+      body.name,
+      body.email,
+      body.password,
+    );
+    session.userId = user.id;
+
+    return user;
   }
 
   @Post('/login')
-  login(@Body() body: LoginUserDto) {
-    return this.authService.login(body.email, body.password);
+  async login(@Body() body: LoginUserDto, @Session() session: any) {
+    const user = await this.authService.login(body.email, body.password);
+    session.userId = user.id;
+    return user;
   }
 }
