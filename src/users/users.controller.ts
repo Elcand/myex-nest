@@ -13,6 +13,7 @@ import { UsersService } from './users.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserDto } from './dtos/user.dto';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
+import { User } from './users.entity';
 
 @Controller('users')
 @Serialize(UserDto)
@@ -42,5 +43,10 @@ export class UsersController {
   @Delete('/:id')
   removeUser(@Param('id') id: string) {
     return this.usersService.remove(parseInt(id));
+  }
+
+  @Get('/auth/current-user')
+  currentUser(@CurrentUser() user: User) {
+    return user;
   }
 }
