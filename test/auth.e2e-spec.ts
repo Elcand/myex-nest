@@ -29,4 +29,21 @@ describe('AuthController (e2e)', () => {
         expect(body.email).toEqual('jj@jj.com');
       });
   });
+
+  it('logged after register', async () => {
+    const email = 'jjjj@jjjj.com';
+
+    const response = await request(app.getHttpServer())
+      .post('/auth/register')
+      .send({ name: 'Jhon Doe', email, password: 'password' })
+      .expect(201);
+
+    const cookie = response.get('Set-Cookie');
+    const { body } = await request(app.getHttpServer())
+      .get('/auth/whoami')
+      .set('Cookie', cookie)
+      .expect(200);
+
+    expect(body.email).toEqual(email);
+  });
 });
