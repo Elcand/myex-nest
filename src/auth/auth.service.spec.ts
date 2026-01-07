@@ -53,4 +53,10 @@ describe('AuthService', () => {
       service.register('John Doe', 'hv3RU@example.com', 'password'),
     ).rejects.toThrow('User already exists');
   });
+
+  it('throws if user login with invalid credentials', async () => {
+    await expect(
+      service.login('admin@example.com', 'password'),
+    ).rejects.toThrow('User not found');
+  });
 });
