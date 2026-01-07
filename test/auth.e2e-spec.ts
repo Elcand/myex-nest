@@ -14,19 +14,19 @@ describe('AuthController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    setupApp(app);
+    // setupApp(app);
     await app.init();
   });
 
   it('handle register', () => {
     return request(app.getHttpServer())
       .post('/auth/register')
-      .send({ name: 'Jhon Doe', email: 'jj@j.com', password: 'password' })
+      .send({ name: 'Jhon Doe', email: 'jj@jj.com', password: 'password' })
       .expect(201)
       .then(({ body }: request.Response) => {
         expect(body.id).toBeDefined();
         expect(body.name).toEqual('Jhon Doe');
-        expect(body.email).toEqual('jj@j.com');
+        expect(body.email).toEqual('jj@jj.com');
       });
   });
 });
