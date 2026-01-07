@@ -54,9 +54,25 @@ describe('AuthService', () => {
     ).rejects.toThrow('User already exists');
   });
 
-  it('throws if user login with invalid credentials', async () => {
+  it('throws if user login with invalid email', async () => {
     await expect(
       service.login('admin@example.com', 'password'),
     ).rejects.toThrow('User not found');
+  });
+
+  it('shuold fail if user login with invalid password', async () => {
+    fakeUserService.findAll = () => {
+      return Promise.resolve([
+        {
+          id: 1,
+          name: 'John Doe',
+          email: 'hv3RU@example.com',
+          password: 'password',
+        } as User,
+      ]);
+    };
+    await expect(
+      service.login('hv3RU@example.com', 'wrong-password'),
+    ).rejects.toThrow('Bad credentials');
   });
 });
