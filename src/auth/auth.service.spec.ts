@@ -8,10 +8,22 @@ describe('AuthService', () => {
   let fakeUserService: Partial<UsersService>;
 
   beforeEach(async () => {
+    const users: User[] = [];
     fakeUserService = {
-      findAll: () => Promise.resolve([]),
+      findAll: (email: string) => {
+        const user = users.find((user) => user.email === email);
+        return Promise.resolve([user]);
+      },
       create: (name: string, email: string, password: string) => {
-        return Promise.resolve({ id: 1, name, email, password } as User);
+        const user = {
+          id: Math.floor(Math.random() * 999999),
+          name,
+          email,
+          password,
+        } as User;
+
+        users.push(user);
+        return Promise.resolve(user);
       },
     };
 
@@ -44,13 +56,13 @@ describe('AuthService', () => {
         {
           id: 1,
           name: 'John Doe',
-          email: 'hv3RU@example.com',
+          email: 'j@j.com',
           password: 'password',
         } as User,
       ]);
     };
     await expect(
-      service.register('John Doe', 'hv3RU@example.com', 'password'),
+      service.register('John Doe', 'j@j.com', 'password'),
     ).rejects.toThrow('User already exists');
   });
 
@@ -66,13 +78,29 @@ describe('AuthService', () => {
         {
           id: 1,
           name: 'John Doe',
-          email: 'hv3RU@example.com',
+          email: 'j@j.com',
           password: 'password',
         } as User,
       ]);
     };
-    await expect(
-      service.login('hv3RU@example.com', 'wrong-password'),
-    ).rejects.toThrow('Bad credentials');
+    await expect(service.login('j@j.com', 'wrong-password')).rejects.toThrow(
+      'Bad credentials',
+    );
+  });
+
+  it('should login exising user', async () => {
+    fakeUserService.findAll = () => {
+      return Promise.resolve([
+        {
+          id: 1,
+          name: 'John Doe',
+          email: 'j@j.com',
+          password:
+            '1361afbf50652909.95c08174590fdbca6f3e0cca4a6dc32edeeacc72231c40dcdc3bc781145cb449',
+        } as User,
+      ]);
+    };
+    const user = await service.login('j@j.com', 'password');
+    expect(user).toBeDefined();
   });
 });
