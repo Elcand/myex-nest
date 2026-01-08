@@ -1,15 +1,15 @@
-import { isNumber, isString, Min } from "class-validator";
+import { IsNumber, IsString, Min } from 'class-validator';
 
 export class CreateItemDto {
-  @isString()
+  @IsString()
   name: string;
-  @isString()
+  @IsString()
   description: string;
-  @isNumber()
+  @IsNumber()
   @Min(0)
   price: number;
-  @isString()
+  @IsString()
   location: string;
-  @isString() 
+  @IsString()
   category: string;
 }
