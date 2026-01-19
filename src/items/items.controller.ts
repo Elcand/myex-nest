@@ -4,7 +4,7 @@ import {
   Patch,
   Param,
   Post,
-  UseGuards
+  UseGuards,
 } from '@nestjs/common';
 import { CreateItemDto } from './dtos/create-item.dto';
 import { ItemsService } from './items.service';
