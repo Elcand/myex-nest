@@ -19,7 +19,7 @@ export class ItemsService {
   }
 
   async approvedItem(id: number, approved: boolean) {
-    const item = await this.ItemRepository.findOne({ id });
+    const item = await this.ItemRepository.findOne({ where: { id } });
     if (!item) {
       throw new NotFoundException('Item not found');
     }

@@ -23,7 +23,7 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
-    const user = this.repo.findOne({ id });
+    const user = this.repo.findOne({ where: { id } });
     if (!user) {
       throw new NotFoundException('User not found');
     }
