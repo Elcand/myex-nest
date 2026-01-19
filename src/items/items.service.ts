@@ -4,6 +4,7 @@ import { Item } from './item.entity';
 import { Repository } from 'typeorm';
 import { CreateItemDto } from './dtos/create-item.dto';
 import { User } from '../users/users.entity';
+import { QueryItemDto } from './dtos/query-item.dto';
 
 @Injectable()
 export class ItemsService {
@@ -26,5 +27,12 @@ export class ItemsService {
 
     item.approved = approved;
     return this.ItemRepository.save(item);
+  }
+
+  getAllItems(queryItemDto: QueryItemDto) {
+    return this.ItemRepository.createQueryBuilder()
+      .select('*')
+      .where('approved = :approved', { approved: true })
+      .getMany();
   }
 }
