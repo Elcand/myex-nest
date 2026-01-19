@@ -14,6 +14,7 @@ import { User } from '../users/users.entity';
 import { ItemDto } from './dtos/item.dto';
 import { Serialize } from '../interceptors/serialize.interceptor';
 import { ApproveItemDto } from './dtos/approve-item.dto';
+import { AdminGuard } from '../guards/admin.guard';
 
 @Controller('items')
 export class ItemsController {
@@ -26,6 +27,7 @@ export class ItemsController {
   }
 
   @Patch('/:id')
+  @UseGuards(AdminGuard)
   approvedItem(@Param('id') id: string, @Body() body: ApproveItemDto) {
     return this.ItemService.approvedItem(parseInt(id), body.isApproved);
   }
